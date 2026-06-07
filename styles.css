@@ -67,6 +67,11 @@ input[type=checkbox]{accent-color:#2a90d4;width:18px;height:18px;cursor:pointer}
 @keyframes card-open{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
 @keyframes row-enter{from{opacity:0;transform:translateX(-5px)}to{opacity:1;transform:none}}
 .recap-row-new{animation:row-enter .16s ease both}
+.ships-enter{animation:ships-reveal .28s cubic-bezier(0.22,1,0.36,1) both}
+@keyframes ships-reveal{from{opacity:0;clip-path:inset(0 0 100% 0)}to{opacity:1;clip-path:inset(0 0 0% 0)}}
+.card-opening{animation:card-open .22s cubic-bezier(0.22,1,0.36,1) both}
+.card-closing{animation:card-collapse .18s ease-in both;pointer-events:none}
+@keyframes card-collapse{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-8px)}}
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
 }

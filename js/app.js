@@ -1,5 +1,7 @@
 const FEEDBACK_HREF='mailto:'; // set to 'mailto:your@email.com' or a feedback URL
 let _u=0;const gid=()=>`u${++_u}`;
+let _openingUid=null;
+let _clsJustChanged=false;
 function mkSlots(sid){
   const def=SHIPS[sid];
   return def.slots.flatMap(({role,n})=>Array.from({length:n},()=>({uid:gid(),role,name:'',trench:false,fps:false})));
@@ -119,7 +121,7 @@ function renderOnboarding(){
 function renderPicker(mb='1.75rem'){
   const clsBtns=CLASSES.map(c=>{const isOn=S.selCls===c.id,acc=CLS_ACC[c.id];return`<button class="cls-btn" data-action="set-cls" data-cls="${c.id}" style="${isOn?`background:${acc.bg};color:${acc.color};border-color:${acc.bd};box-shadow:0 0 12px ${acc.bg}`:''}"><i class="ti ${CLS_ICONS[c.id]}" aria-hidden="true"></i>${Tcls(c.id)}</button>`;}).join('');
   let ships='';
-  if(S.selCls){const acc=CLS_ACC[S.selCls];const list=Object.entries(SHIPS).filter(([,d])=>d.cls===S.selCls).sort(([,a],[,b])=>a.name.localeCompare(b.name));ships=`<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;padding-top:14px;border-top:1px solid ${acc.bd}">${list.map(([sid,d])=>`<button class="ship-btn${d.fav?' fav-btn':''}" data-action="add-ship" data-ship-id="${sid}">${d.fav?'★ ':''}${d.name}${d.warn?`<i class="ti ti-alert-triangle" style="font-size:12px;color:#c47a20" aria-hidden="true"></i>`:''}</button>`).join('')}</div>`;}
+  if(S.selCls){const acc=CLS_ACC[S.selCls];const list=Object.entries(SHIPS).filter(([,d])=>d.cls===S.selCls).sort(([,a],[,b])=>a.name.localeCompare(b.name));const sCls=_clsJustChanged?'ships-enter':'';_clsJustChanged=false;ships=`<div class="${sCls}" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;padding-top:14px;border-top:1px solid ${acc.bd}">${list.map(([sid,d])=>`<button class="ship-btn${d.fav?' fav-btn':''}" data-action="add-ship" data-ship-id="${sid}">${d.fav?'★ ':''}${d.name}${d.warn?`<i class="ti ti-alert-triangle" style="font-size:12px;color:#c47a20" aria-hidden="true"></i>`:''}</button>`).join('')}</div>`;}
   return`<div style="margin-bottom:${mb}"><div class="lbl" style="margin-bottom:10px">${Tr('add')}</div><div style="display:flex;gap:8px;flex-wrap:wrap">${clsBtns}</div>${ships}</div>`;
 }
 
@@ -137,7 +139,8 @@ function renderFleet(){
     if(!ship.open){h+=`<div id="ship-card-${ship.uid}" class="card" style="border-left-color:${cardBd};cursor:pointer;padding:12px 1.5rem" data-action="open-ship" data-uid="${ship.uid}"><div style="display:flex;justify-content:space-between;align-items:center"><div style="display:flex;align-items:center;gap:12px"><i class="ti ${CLS_ICONS[def.cls]}" style="font-size:18px;color:${acc.color}" aria-hidden="true"></i><span style="font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;color:#c8dcea">${def.fav?'<span style="color:#d4a020">★</span> ':''}${def.name}</span>${def.tunnel?st('success',Tr('tunnel')):''}</div><div style="display:flex;align-items:center;gap:10px"><span class="stag" style="background:${SC.warning.bg};color:${SC.warning.text};border:.5px solid ${SC.warning.bd}">${filled}/${total}</span><i class="ti ti-chevron-down" style="font-size:14px;color:#4a7090" aria-hidden="true"></i></div></div></div>`;return;}
     const rkc=fullyFilled?'success':'warning',pW=ship.shipId==='perseus'&&filled<2,ar=CAT_ROLES[def.cat]||[];
     const c=SC[rkc];
-    h+=`<div id="ship-card-${ship.uid}" class="card" style="border-left-color:${cardBd}">
+    const openCls=ship.uid===_openingUid?' card-opening':'';if(ship.uid===_openingUid)_openingUid=null;
+    h+=`<div id="ship-card-${ship.uid}" class="card${openCls}" style="border-left-color:${cardBd}">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px">
         <div style="display:flex;align-items:center;gap:12px">
           <i class="ti ${CLS_ICONS[def.cls]}" style="font-size:22px;color:${acc.color}" aria-hidden="true"></i>
@@ -312,20 +315,21 @@ function setTab(t){
     }
   }
 }
-function setCls(c){S.selCls=S.selCls===c?null:c;S.langOpen=false;const el=document.getElementById('picker-section');if(el)el.innerHTML=renderPicker('0');else render();}
+function setCls(c){S.selCls=S.selCls===c?null:c;S.langOpen=false;if(S.selCls)_clsJustChanged=true;const el=document.getElementById('picker-section');if(el)el.innerHTML=renderPicker('0');else render();}
 function togLang(){S.langOpen=!S.langOpen;render();}
 function setLang(lg){S.lang=lg;S.langOpen=false;render();}
-function addShip(sid){S.fleet.forEach(s=>s.open=false);S.fleet.push(mkShip(sid));S.langOpen=false;render();}
+function animateCardClose(uid,cb){const el=document.getElementById('ship-card-'+uid);if(!el||window.matchMedia('(prefers-reduced-motion:reduce)').matches){cb();return;}el.classList.add('card-closing');setTimeout(cb,180);}
+function addShip(sid){const cur=S.fleet.find(s=>s.open);const doAdd=()=>{S.fleet.forEach(s=>s.open=false);S.fleet.push(mkShip(sid));S.langOpen=false;render();};if(cur)animateCardClose(cur.uid,doAdd);else doAdd();}
 function rmShip(uid){S.fleet=S.fleet.filter(s=>s.uid!==uid);render();}
 function resetFleet(){S.fleet=[];S.selCls=null;S.langOpen=false;resetCardCache();render();}
 function togBal(uid){const s=S.fleet.find(s=>s.uid===uid);if(!s)return;s.ballistic=!s.ballistic;const card=document.getElementById('ship-card-'+uid);if(card){const def=SHIPS[s.shipId],acc=CLS_ACC[def.cls];card.style.borderLeftColor=def.cat==='fighters'&&s.ballistic?'rgba(34,212,128,0.6)':acc.bd;}const lbl=document.getElementById('lbl-'+uid+'-bal');if(lbl)lbl.style.color=s.ballistic?'#22d480':'#ff5040';const rb=document.getElementById('recap-body');if(rb)rb.innerHTML=renderRecapRows();const rc=document.getElementById('recap-card');if(rc)rc.style.display=S.fleet.some(s=>s.confirmed)?'':'none';updateHeaderScore();saveState();}
 function updName(sUid,slUid,val){const ship=S.fleet.find(s=>s.uid===sUid),sl=ship?.slots.find(s=>s.uid===slUid);if(!sl)return;sl.name=sanitizePlayerName(val);const filled=ship.slots.filter(s=>s.name.trim()).length,total=ship.slots.length;const badge=document.getElementById('badge-'+sUid);if(badge){const c=SC[filled===total?'success':'warning'];badge.textContent=filled+'/'+total;badge.style.background=c.bg;badge.style.color=c.text;badge.style.border=`.5px solid ${c.bd}`;}const rb=document.getElementById('recap-body');if(rb)rb.innerHTML=renderRecapRows();const rc=document.getElementById('recap-card');if(rc)rc.style.display=S.fleet.some(s=>s.confirmed)?'':'none';saveState();}
 function togSlot(sUid,slUid,f){const ship=S.fleet.find(s=>s.uid===sUid);const sl=ship?.slots.find(s=>s.uid===slUid);if(!sl)return;sl[f]=!sl[f];const lbl=document.getElementById(`lbl-${slUid}-${f}`);if(lbl)lbl.style.color=sl[f]?(f==='trench'?'#f0a020':'#4db8ff'):'#4a7090';const rb=document.getElementById('recap-body');if(rb)rb.innerHTML=renderRecapRows();const rc=document.getElementById('recap-card');if(rc)rc.style.display=S.fleet.some(s=>s.confirmed)?'':'none';updateHeaderScore();saveState();}
-function openShip(uid){S.fleet.forEach(s=>s.open=false);const ship=S.fleet.find(s=>s.uid===uid);if(ship)ship.open=true;render();}
-function checkAutoClose(sUid){const ship=S.fleet.find(s=>s.uid===sUid);if(!ship||!ship.open)return;if(ship.slots.every(s=>s.name.trim())){ship.open=false;render();}}
-function validateShip(uid){const ship=S.fleet.find(s=>s.uid===uid);if(ship){ship.open=false;ship.confirmed=true;delete ship._wasConfirmed;render();}}
-function cancelShip(uid){const ship=S.fleet.find(s=>s.uid===uid);if(!ship)return;if(ship._wasConfirmed){ship.open=false;ship.confirmed=true;delete ship._wasConfirmed;}else{S.fleet=S.fleet.filter(s=>s.uid!==uid);}render();}
-function editShip(uid){S.fleet.forEach(s=>{if(s.uid!==uid)s.open=false;});const ship=S.fleet.find(s=>s.uid===uid);if(ship){ship._wasConfirmed=ship.confirmed;ship.open=true;ship.confirmed=false;}render();requestAnimationFrame(()=>{const el=document.getElementById('ship-card-'+uid);if(el)el.scrollIntoView({behavior:'smooth',block:'nearest'});});}
+function openShip(uid){const cur=S.fleet.find(s=>s.open);const doOpen=()=>{S.fleet.forEach(s=>s.open=false);const ship=S.fleet.find(s=>s.uid===uid);if(ship){ship.open=true;_openingUid=uid;}render();};if(cur&&cur.uid!==uid)animateCardClose(cur.uid,doOpen);else doOpen();}
+function checkAutoClose(sUid){const ship=S.fleet.find(s=>s.uid===sUid);if(!ship||!ship.open)return;if(ship.slots.every(s=>s.name.trim())){animateCardClose(sUid,()=>{ship.open=false;render();});}}
+function validateShip(uid){animateCardClose(uid,()=>{const ship=S.fleet.find(s=>s.uid===uid);if(ship){ship.open=false;ship.confirmed=true;delete ship._wasConfirmed;render();}});}
+function cancelShip(uid){const ship=S.fleet.find(s=>s.uid===uid);if(!ship)return;animateCardClose(uid,()=>{if(ship._wasConfirmed){ship.open=false;ship.confirmed=true;delete ship._wasConfirmed;}else{S.fleet=S.fleet.filter(s=>s.uid!==uid);}render();});}
+function editShip(uid){S.fleet.forEach(s=>{if(s.uid!==uid)s.open=false;});const ship=S.fleet.find(s=>s.uid===uid);if(ship){ship._wasConfirmed=ship.confirmed;ship.open=true;ship.confirmed=false;_openingUid=uid;}render();requestAnimationFrame(()=>{const el=document.getElementById('ship-card-'+uid);if(el)el.scrollIntoView({behavior:'smooth',block:'nearest'});});}
 
 function handleClick(e){
   const el=e.target.closest('[data-action]');
