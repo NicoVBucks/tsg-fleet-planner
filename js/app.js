@@ -240,10 +240,13 @@ function render(){
   document.getElementById('root').innerHTML=`
     <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:2rem;gap:12px">
       <div>
-        <div style="font-family:'Rajdhani',sans-serif;font-size:26px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#c8dcea;display:flex;align-items:center;gap:12px">
-          <i class="ti ti-rocket" style="font-size:24px;color:#2a90d4" aria-hidden="true"></i><span id="tsg-title-text">TACTICAL STRIKE GROUPS</span>
+        <div style="font-family:'Rajdhani',sans-serif;font-size:26px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#c8dcea">
+          <span id="tsg-title-text">TACTICAL STRIKE GROUPS</span>
         </div>
-        <div id="tsg-subtitle" style="font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#3a6a8a;margin-top:5px">FLEET PLANNER · INTERSEC DEFENSE SOLUTIONS</div>
+        <div id="tsg-subtitle" style="margin-top:4px">
+          <div style="font-family:'Rajdhani',sans-serif;font-size:26px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#c8dcea">FLEET PLANNER</div>
+          <div style="font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#3a6a8a;margin-top:5px">INTERSEC DEFENSE SOLUTIONS</div>
+        </div>
       </div>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:10px">
         <div id="header-score">${sc?`<div style="display:flex;align-items:center;gap:10px"><span style="font-family:'Share Tech Mono',monospace;font-size:28px;color:${SC[sc.rk].text}"><span id="header-score-val">${sc.pct}</span><span style="font-size:14px;color:#3a6a8a;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:.08em"> /100</span></span>${st(sc.rk,sc.rating)}</div>`:''}</div>
