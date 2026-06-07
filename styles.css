@@ -46,9 +46,13 @@ input[type=checkbox]{accent-color:#2a90d4;width:18px;height:18px;cursor:pointer}
 .chk-wrap{display:flex;align-items:center;gap:9px;font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;letter-spacing:.05em;cursor:pointer;white-space:nowrap;padding:2px 0;transition:color .15s}
 .trench-sel{display:flex;gap:5px;overflow:hidden;max-height:0;opacity:0;transition:max-height .18s ease,opacity .15s ease}
 .trench-sel.trench-sel-on{max-height:32px;opacity:1}
-.trench-btn{background:transparent;border:1px solid rgba(240,160,32,0.25);border-radius:3px;cursor:pointer;padding:2px 9px;font-family:'Share Tech Mono',monospace;font-size:13px;font-weight:700;color:#4a7090;transition:all .12s;white-space:nowrap}
-.trench-btn:hover:not(.active){border-color:rgba(240,160,32,0.5);color:#b89050}
-.trench-btn.active{border-color:#f0a020;color:#f0a020;background:rgba(240,160,32,0.1);box-shadow:0 0 8px rgba(240,160,32,0.2)}
+.trench-btn{background:transparent;border:1px solid rgba(42,100,180,0.2);border-radius:3px;cursor:pointer;padding:2px 9px;font-family:'Share Tech Mono',monospace;font-size:13px;font-weight:700;color:#4a7090;transition:all .12s;white-space:nowrap}
+.trench-btn-a:hover:not(.active){border-color:rgba(240,160,32,0.45);color:#c09040}
+.trench-btn-b:hover:not(.active){border-color:rgba(77,184,255,0.45);color:#5a8ab0}
+.trench-btn-c:hover:not(.active){border-color:rgba(34,212,128,0.45);color:#4a8060}
+.trench-btn-a.active{border-color:#f0a020;color:#f0a020;background:rgba(240,160,32,0.1);box-shadow:0 0 8px rgba(240,160,32,0.2)}
+.trench-btn-b.active{border-color:#4db8ff;color:#4db8ff;background:rgba(77,184,255,0.1);box-shadow:0 0 8px rgba(77,184,255,0.2)}
+.trench-btn-c.active{border-color:#22d480;color:#22d480;background:rgba(34,212,128,0.1);box-shadow:0 0 8px rgba(34,212,128,0.2)}
 .empty{text-align:center;padding:3rem 2rem;color:#4a7090;font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:600;letter-spacing:.05em;border:1px dashed rgba(42,100,180,0.2);border-radius:4px}
 .timer-big{font-family:'Share Tech Mono','Courier New',monospace;font-size:90px;line-height:1;letter-spacing:.06em;color:#c8dcea}
 .t-live{color:#4db8ff;animation:pulse-live 1.8s ease-in-out infinite}

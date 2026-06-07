@@ -63,7 +63,7 @@ function loadState(){
 }
 
 function allNamed(){return S.fleet.flatMap(ship=>ship.slots.filter(s=>s.name.trim()).map(s=>({...s,ship,def:SHIPS[ship.shipId]})));}
-function rolesBadges(sl){const p=[];if(sl.trench)p.push(st('warning',Tr('trench')));if(sl.fps)p.push(st('info',Tr('fps_lbl')));return p.join(' ');}
+function rolesBadges(sl){const p=[];if(sl.trench){const TCLR={A:'#f0a020',B:'#4db8ff',C:'#22d480'};const L=['A','B','C'].includes(sl.trench)?sl.trench:'';p.push(st('warning',L?`${Tr('trench')} <span style="color:${TCLR[L]};font-weight:900;margin-left:2px">· ${L}</span>`:Tr('trench')));}if(sl.fps)p.push(st('info',Tr('fps_lbl')));return p.join(' ');}
 
 function renderRecapRows(){
   const groups=S.fleet.map(ship=>{const def=SHIPS[ship.shipId];const members=ship.slots.filter(s=>s.name.trim()).map(s=>({...s,def}));return{ship,def,members};}).filter(g=>g.ship.confirmed);
@@ -160,8 +160,8 @@ function renderFleet(){
           <div style="font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#5a90b8;min-width:86px;flex-shrink:0">${sl.role}</div>
           <input type="text" maxlength="40" placeholder="${Tr('ph_name')}" value="${escapeHTML(sl.name)}" data-action="upd-name" data-uid="${ship.uid}" data-slot-id="${sl.uid}">
           ${slIdx===0&&def.cat==='fighters'?`<label id="lbl-${ship.uid}-bal" class="chk-wrap" style="color:${ship.ballistic?'#22d480':'#ff5040'}"><input type="checkbox" ${ship.ballistic?'checked':''} data-action="tog-bal" data-uid="${ship.uid}"><i class="ti ti-target" style="font-size:16px" aria-hidden="true"></i>${Tr('bal_lbl')}</label>`:''}
-          ${ar.includes('trench')?`<label id="lbl-${sl.uid}-trench" class="chk-wrap" style="color:${sl.trench?'#f0a020':'#4a7090'}"><input type="checkbox" ${sl.trench?'checked':''} data-action="tog-slot" data-uid="${ship.uid}" data-slot-id="${sl.uid}" data-field="trench"><i class="ti ti-plane-departure" style="font-size:16px" aria-hidden="true"></i>${Tr('trench')}</label><div id="trench-sel-${sl.uid}" class="trench-sel${sl.trench?' trench-sel-on':''}">${['A','B','C'].map(t=>`<button class="trench-btn${sl.trench===t?' active':''}" data-action="set-trench" data-uid="${ship.uid}" data-slot-id="${sl.uid}" data-val="${t}">${t}</button>`).join('')}</div>`:''}
           ${ar.includes('fps')?`<label id="lbl-${sl.uid}-fps" class="chk-wrap" style="color:${sl.fps?'#4db8ff':'#4a7090'}"><input type="checkbox" ${sl.fps?'checked':''} data-action="tog-slot" data-uid="${ship.uid}" data-slot-id="${sl.uid}" data-field="fps"><i class="ti ti-shield-bolt" style="font-size:16px" aria-hidden="true"></i>${Tr('fps_lbl')}</label>`:''}
+          ${ar.includes('trench')?`<label id="lbl-${sl.uid}-trench" class="chk-wrap" style="color:${sl.trench?'#f0a020':'#4a7090'}"><input type="checkbox" ${sl.trench?'checked':''} data-action="tog-slot" data-uid="${ship.uid}" data-slot-id="${sl.uid}" data-field="trench"><i class="ti ti-plane-departure" style="font-size:16px" aria-hidden="true"></i>${Tr('trench')}</label><div id="trench-sel-${sl.uid}" class="trench-sel${sl.trench?' trench-sel-on':''}">${['A','B','C'].map(t=>`<button class="trench-btn trench-btn-${t.toLowerCase()}${sl.trench===t?' active':''}" data-action="set-trench" data-uid="${ship.uid}" data-slot-id="${sl.uid}" data-val="${t}">${t}</button>`).join('')}</div>`:''}
         </div>`).join('')}
       </div>
       <div style="display:flex;justify-content:flex-end;gap:8px;padding-top:14px;margin-top:10px;border-top:1px solid rgba(42,100,180,0.15)">
