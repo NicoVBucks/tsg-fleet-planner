@@ -23,7 +23,7 @@ function initTitleAnimation() {
   if (sub) sub.style.opacity = '0';
 
   function typeLine(target, text, firstDelay, onDone) {
-    // Render all chars as transparent spans so layout stays stable
+    target.style.color = ''; // clear initial transparent override so children can inherit parent color
     target.innerHTML = text.split('').map(ch => `<span style="color:transparent">${ch}</span>`).join('');
     const spans = Array.from(target.querySelectorAll('span'));
     const cursor = document.createElement('span');

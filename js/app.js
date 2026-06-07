@@ -241,10 +241,10 @@ function render(){
     <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:2rem;gap:12px">
       <div>
         <div style="font-family:'Rajdhani',sans-serif;font-size:26px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#c8dcea">
-          <span id="tsg-title-text">TACTICAL STRIKE GROUPS</span>
+          <span id="tsg-title-text" style="${_titleDone?'':'color:transparent'}">TACTICAL STRIKE GROUPS</span>
         </div>
         <div style="font-family:'Rajdhani',sans-serif;font-size:26px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#c8dcea">
-          <span id="tsg-title-text-2">FLEET PLANNER</span>
+          <span id="tsg-title-text-2" style="${_titleDone?'':'color:transparent'}">FLEET PLANNER</span>
         </div>
         <div id="tsg-subtitle" style="margin-top:5px">
           <div style="font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#3a6a8a">INTERSEC DEFENSE SOLUTIONS</div>
