@@ -597,7 +597,7 @@ async function generateShareCard(){
         ctx.fillText(m.role.toUpperCase(),PAD+14+nW+7,y+17);
         const roW=ctx.measureText(m.role.toUpperCase()).width;
         let mx=PAD+14+nW+7+roW+7;
-        if(m.trench)mx=_cBadge(ctx,Tr('trench').toUpperCase(),'#f0a020','rgba(212,144,16,0.12)','rgba(212,144,16,0.3)',mx,y+4,9)+4;
+        if(m.trench){const _TL=['A','B','C'].includes(m.trench)?m.trench:'';const _TC={A:'#f0a020',B:'#4db8ff',C:'#22d480'};const _TBG={A:'rgba(212,144,16,0.12)',B:'rgba(42,144,212,0.12)',C:'rgba(26,184,100,0.12)'};const _TBD={A:'rgba(212,144,16,0.3)',B:'rgba(42,144,212,0.3)',C:'rgba(26,184,100,0.3)'};const _tc=_TC[_TL]||'#f0a020';mx=_cBadge(ctx,(_TL?`${Tr('trench').toUpperCase()} · ${_TL}`:Tr('trench').toUpperCase()),_tc,_TBG[_TL]||'rgba(212,144,16,0.12)',_TBD[_TL]||'rgba(212,144,16,0.3)',mx,y+4,9)+4;}
         if(m.fps)mx=_cBadge(ctx,Tr('fps_lbl').toUpperCase(),'#4db8ff','rgba(42,144,212,0.12)','rgba(42,144,212,0.3)',mx,y+4,9)+4;
         y+=MH;
       });
