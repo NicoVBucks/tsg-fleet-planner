@@ -1,3 +1,5 @@
+const APP_AUTHOR  = 'Daygonn';
+const APP_VERSION = 'v0.9';
 const FEEDBACK_HREF='mailto:'; // set to 'mailto:your@email.com' or a feedback URL
 let _u=0;const gid=()=>`u${++_u}`;
 let _openingUid=null;
@@ -271,9 +273,9 @@ function render(){
       <div class="util-bar">
         <div class="util-bar-left">
           <img src="assets/images/logos/MadeByTheCommunity_White.png" alt="Made by the Community" class="footer-badge" style="height:52px;opacity:.95">
-          <span class="util-brand">TSG Fleet Planner<span class="util-ver">v0.9</span></span>
+          <span class="util-brand">TSG Fleet Planner<span class="util-ver">${APP_VERSION}</span></span>
           <span class="util-dot">·</span>
-          <span style="font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:600;color:#4a7090">Created by <button class="util-link" data-action="open-modal" data-modal="about" style="color:#d4a020">Daygonn</button></span>
+          <span style="font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:600;color:#4a7090">Created by <button class="util-link" data-action="open-modal" data-modal="about" style="color:#d4a020">${APP_AUTHOR}</button></span>
         </div>
         <div class="util-bar-right">
           <button class="util-link" data-action="open-modal" data-modal="whats-new">${Tr('f_whats_new')}</button>
@@ -403,7 +405,7 @@ function renderModal(type){
   function mcheck(txt){return`<div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:9px"><i class="ti ti-check" style="font-size:14px;color:#22d480;flex-shrink:0;margin-top:2px" aria-hidden="true"></i><span style="font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:600;color:#a8c8e0;line-height:1.5">${txt}</span></div>`;}
 
   const body={
-    'whats-new':`<div style="font-family:'Share Tech Mono',monospace;font-size:11px;color:#4db8ff;letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px">v0.9 — Latest</div>
+    'whats-new':`<div style="font-family:'Share Tech Mono',monospace;font-size:11px;color:#4db8ff;letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px">${APP_VERSION} — Latest</div>
       ${mrow('new','Crew Summary export — download a PNG and copy to clipboard')}
       ${mrow('new','Mission briefing onboarding with step-by-step guide')}
       ${mrow('upd','Local autosave — fleet and timer persist across page closes')}
@@ -414,7 +416,7 @@ function renderModal(type){
       ${mcheck('Crew Summary images are generated locally using the Canvas API.')}
       ${mcheck('Nothing is sent anywhere unless you export or share it yourself.')}
       ${mcheck('The Star Citizen link opens the official site in a new tab.')}`,
-    'about':`<div style="font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:600;color:#a8c8e0;line-height:1.75;margin-bottom:16px">TSG Fleet Planner is an unofficial Star Citizen community tool created by <span style="color:#d4a020;font-weight:700">Daygonn</span> to help mission leads plan fleet composition, assign crew roles, evaluate readiness and share summaries with their team.</div>
+    'about':`<div style="font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:600;color:#a8c8e0;line-height:1.75;margin-bottom:16px">TSG Fleet Planner is an unofficial Star Citizen community tool created by <span style="color:#d4a020;font-weight:700">${APP_AUTHOR}</span> to help mission leads plan fleet composition, assign crew roles, evaluate readiness and share summaries with their team.</div>
       <div style="font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:600;color:#3a5870;line-height:1.7;padding-top:12px;border-top:1px solid rgba(42,100,180,0.14)">Star Citizen, Squadron 42, Roberts Space Industries, RSI and related marks are trademarks of Cloud Imperium Rights LLC and/or Cloud Imperium Rights Ltd. This tool is not endorsed by or affiliated with Cloud Imperium Group.</div>`
   };
   const titles={'whats-new':"What's New",'privacy':'Privacy','about':'About TSG Fleet Planner'};
