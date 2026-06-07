@@ -64,7 +64,7 @@ function allNamed(){return S.fleet.flatMap(ship=>ship.slots.filter(s=>s.name.tri
 function rolesBadges(sl){const p=[];if(sl.trench)p.push(st('warning',Tr('trench')));if(sl.fps)p.push(st('info',Tr('fps_lbl')));return p.join(' ');}
 
 function renderRecapRows(){
-  const groups=S.fleet.map(ship=>{const def=SHIPS[ship.shipId];const members=ship.slots.filter(s=>s.name.trim()).map(s=>({...s,def}));return{ship,def,members};}).filter(g=>g.ship.confirmed&&g.members.length>0);
+  const groups=S.fleet.map(ship=>{const def=SHIPS[ship.shipId];const members=ship.slots.filter(s=>s.name.trim()).map(s=>({...s,def}));return{ship,def,members};}).filter(g=>g.ship.confirmed);
   if(!groups.length)return'';
   return groups.map((g,gi)=>{
     const acc=CLS_ACC[g.def.cls];
@@ -134,7 +134,7 @@ function renderFleet(){
   S.fleet.forEach(ship=>{
     const def=SHIPS[ship.shipId],filled=ship.slots.filter(s=>s.name.trim()).length,total=ship.slots.length;
     const fullyFilled=filled===total;
-    if(!ship.open && fullyFilled) return;
+    if(!ship.open && (ship.confirmed || fullyFilled)) return;
     const acc=CLS_ACC[def.cls],cardBd=def.cat==='fighters'&&ship.ballistic?'rgba(34,212,128,0.6)':acc.bd;
     if(!ship.open){h+=`<div id="ship-card-${ship.uid}" class="card" style="border-left-color:${cardBd};cursor:pointer;padding:12px 1.5rem" data-action="open-ship" data-uid="${ship.uid}"><div style="display:flex;justify-content:space-between;align-items:center"><div style="display:flex;align-items:center;gap:12px"><i class="ti ${CLS_ICONS[def.cls]}" style="font-size:18px;color:${acc.color}" aria-hidden="true"></i><span style="font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;color:#c8dcea">${def.fav?'<span style="color:#d4a020">★</span> ':''}${def.name}</span>${def.tunnel?st('success',Tr('tunnel')):''}</div><div style="display:flex;align-items:center;gap:10px"><span class="stag" style="background:${SC.warning.bg};color:${SC.warning.text};border:.5px solid ${SC.warning.bd}">${filled}/${total}</span><i class="ti ti-chevron-down" style="font-size:14px;color:#4a7090" aria-hidden="true"></i></div></div></div>`;return;}
     const rkc=fullyFilled?'success':'warning',pW=ship.shipId==='perseus'&&filled<2,ar=CAT_ROLES[def.cat]||[];
@@ -324,7 +324,7 @@ function setCls(c){S.selCls=S.selCls===c?null:c;S.langOpen=false;if(S.selCls)_cl
 function togLang(){S.langOpen=!S.langOpen;render();}
 function setLang(lg){S.lang=lg;S.langOpen=false;render();}
 function animateCardClose(uid,cb){const el=document.getElementById('ship-card-'+uid);if(!el||window.matchMedia('(prefers-reduced-motion:reduce)').matches){cb();return;}el.classList.add('card-closing');setTimeout(cb,180);}
-function addShip(sid){const cur=S.fleet.find(s=>s.open);const doAdd=()=>{S.fleet.forEach(s=>s.open=false);S.fleet.push(mkShip(sid));S.langOpen=false;render();};if(cur)animateCardClose(cur.uid,doAdd);else doAdd();}
+function addShip(sid){const cur=S.fleet.find(s=>s.open);const blank=cur&&!cur.confirmed&&cur.slots.every(s=>!s.name.trim());const doAdd=()=>{S.fleet.forEach(s=>s.open=false);if(blank)S.fleet=S.fleet.filter(s=>s.uid!==cur.uid);S.fleet.push(mkShip(sid));S.langOpen=false;render();};if(cur)animateCardClose(cur.uid,doAdd);else doAdd();}
 function rmShip(uid){S.fleet=S.fleet.filter(s=>s.uid!==uid);render();}
 function resetFleet(){S.fleet=[];S.selCls=null;S.langOpen=false;resetCardCache();render();}
 function togBal(uid){const s=S.fleet.find(s=>s.uid===uid);if(!s)return;s.ballistic=!s.ballistic;const card=document.getElementById('ship-card-'+uid);if(card){const def=SHIPS[s.shipId],acc=CLS_ACC[def.cls];card.style.borderLeftColor=def.cat==='fighters'&&s.ballistic?'rgba(34,212,128,0.6)':acc.bd;}const lbl=document.getElementById('lbl-'+uid+'-bal');if(lbl)lbl.style.color=s.ballistic?'#22d480':'#ff5040';const rb=document.getElementById('recap-body');if(rb)rb.innerHTML=renderRecapRows();const rc=document.getElementById('recap-card');if(rc)rc.style.display=S.fleet.some(s=>s.confirmed)?'':'none';updateHeaderScore();saveState();}
