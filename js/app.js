@@ -63,7 +63,7 @@ function loadState(){
 }
 
 function allNamed(){return S.fleet.flatMap(ship=>ship.slots.filter(s=>s.name.trim()).map(s=>({...s,ship,def:SHIPS[ship.shipId]})));}
-function rolesBadges(sl){const p=[];if(sl.trench){const TCLR={A:'#f0a020',B:'#4db8ff',C:'#22d480'};const L=['A','B','C'].includes(sl.trench)?sl.trench:'';p.push(st('warning',L?`${Tr('trench')} <span style="color:${TCLR[L]};font-weight:900;margin-left:2px">· ${L}</span>`:Tr('trench')));}if(sl.fps)p.push(st('info',Tr('fps_lbl')));return p.join(' ');}
+function rolesBadges(sl){const p=[];if(sl.trench){const TCLR={A:'#ffd000',B:'#4db8ff',C:'#22d480'};const L=['A','B','C'].includes(sl.trench)?sl.trench:'';p.push(st('warning',L?`${Tr('trench')} <span style="color:${TCLR[L]};font-weight:900;margin-left:2px">· ${L}</span>`:Tr('trench')));}if(sl.fps)p.push(st('info',Tr('fps_lbl')));return p.join(' ');}
 
 function renderRecapRows(){
   const groups=S.fleet.map(ship=>{const def=SHIPS[ship.shipId];const members=ship.slots.filter(s=>s.name.trim()||s.trench||s.fps).map(s=>({...s,def}));return{ship,def,members};}).filter(g=>g.ship.confirmed);
