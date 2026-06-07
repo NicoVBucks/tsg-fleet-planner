@@ -11,36 +11,50 @@ function resetCardCache(){ _shownCards.clear(); _lastScore = null; _lastHeaderSc
 
 function initTitleAnimation() {
   if (_titleDone || _rm.matches) return;
-  const el = document.getElementById('tsg-title-text');
+  const el  = document.getElementById('tsg-title-text');
+  const el2 = document.getElementById('tsg-title-text-2');
   if (!el) return;
   _titleDone = true;
 
-  const full = el.textContent;
+  const full1 = el.textContent;
+  const full2 = el2 ? el2.textContent : '';
   el.textContent = '';
-
-  const cursor = document.createElement('span');
-  cursor.className = 'type-cursor';
-  cursor.textContent = '█';
-  el.insertAdjacentElement('afterend', cursor);
+  if (el2) el2.textContent = '';
 
   const sub = document.getElementById('tsg-subtitle');
-  if (sub) { sub.style.opacity = '0'; }
+  if (sub) sub.style.opacity = '0';
 
-  let i = 0;
-  function tick() {
-    if (i < full.length) {
-      el.textContent += full[i++];
-      setTimeout(tick, i === 1 ? 120 : 36);
-    } else {
-      cursor.classList.add('cursor-done');
-      setTimeout(() => cursor.remove(), 900);
-      if (sub) {
-        sub.style.opacity = '';
-        sub.classList.add('subtitle-reveal');
+  function typeLine(target, text, firstDelay, onDone) {
+    const cursor = document.createElement('span');
+    cursor.className = 'type-cursor';
+    cursor.textContent = '█';
+    target.insertAdjacentElement('afterend', cursor);
+    let i = 0;
+    function tick() {
+      if (i < text.length) {
+        target.textContent += text[i++];
+        setTimeout(tick, i === 1 ? firstDelay : 36);
+      } else {
+        cursor.classList.add('cursor-done');
+        setTimeout(() => { cursor.remove(); onDone(); }, 600);
       }
     }
+    tick();
   }
-  setTimeout(tick, 280);
+
+  setTimeout(() => {
+    typeLine(el, full1, 120, () => {
+      setTimeout(() => {
+        if (el2) {
+          typeLine(el2, full2, 80, () => {
+            if (sub) { sub.style.opacity = ''; sub.classList.add('subtitle-reveal'); }
+          });
+        } else {
+          if (sub) { sub.style.opacity = ''; sub.classList.add('subtitle-reveal'); }
+        }
+      }, 100);
+    });
+  }, 280);
 }
 
 function applyCascade() {
