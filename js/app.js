@@ -505,7 +505,7 @@ async function generateShareCard(){
     const SCALE=2,W=720,PAD=32;
     const SH=28,MH=26,GH=14;
     let shH=0;groups.forEach(g=>{shH+=SH+g.members.length*MH+GH;});
-    const totalH=PAD+68+20+96+28+20+24+shH+18+20+PAD;
+    const totalH=PAD+82+20+96+28+20+24+shH+18+20+PAD;
 
     const canvas=document.createElement('canvas');
     canvas.width=W*SCALE;canvas.height=totalH*SCALE;
@@ -528,10 +528,11 @@ async function generateShareCard(){
     // Header
     ctx.fillStyle='#c8dcea';ctx.font="bold 20px 'Rajdhani',sans-serif";
     ctx.fillText('TACTICAL STRIKE GROUPS',PAD,y+21);
-    ctx.fillStyle='rgba(42,144,212,0.42)';ctx.fillRect(PAD,y+29,38,1.5);
+    ctx.fillText('FLEET PLANNER',PAD,y+44);
+    ctx.fillStyle='rgba(42,144,212,0.42)';ctx.fillRect(PAD,y+53,38,1.5);
     ctx.fillStyle='#3a6a8a';ctx.font="bold 11px 'Rajdhani',sans-serif";
-    ctx.fillText('FLEET PLANNER  ·  INTERSEC DEFENSE SOLUTIONS',PAD,y+49);
-    y+=68;
+    ctx.fillText('INTERSEC DEFENSE SOLUTIONS',PAD,y+68);
+    y+=82;
 
     // Sep
     _cSep(ctx,PAD,y,W-PAD);y+=20;
@@ -596,7 +597,7 @@ async function generateShareCard(){
         ctx.fillText(m.role.toUpperCase(),PAD+14+nW+7,y+17);
         const roW=ctx.measureText(m.role.toUpperCase()).width;
         let mx=PAD+14+nW+7+roW+7;
-        if(m.trench){const _TL=['A','B','C'].includes(m.trench)?m.trench:'';const _TC={A:'#f0a020',B:'#4db8ff',C:'#22d480'};const _fs=9,_px=6,_py=3;const _tLabel=Tr('trench').toUpperCase();const _tLetter=_TL?` · ${_TL}`:'';ctx.font=`bold ${_fs}px 'Rajdhani',sans-serif`;const _tw=ctx.measureText(_tLabel).width,_lw=_TL?ctx.measureText(_tLetter).width:0;const _bw=_tw+_lw+_px*2,_bh=_fs+_py*2+1;_cRect(ctx,mx,y+4,_bw,_bh,2,'rgba(212,144,16,0.12)','rgba(212,144,16,0.3)');ctx.fillStyle='#f0a020';ctx.fillText(_tLabel,mx+_px,y+4+_bh-_py-1);if(_TL){ctx.fillStyle=_TC[_TL];ctx.fillText(_tLetter,mx+_px+_tw,y+4+_bh-_py-1);}mx+=_bw+4;}
+        if(m.trench){const _TL=['A','B','C'].includes(m.trench)?m.trench:'';const _TC={A:'#ffd000',B:'#4db8ff',C:'#22d480'};const _fs=9,_px=6,_py=3;const _tLabel=Tr('trench').toUpperCase();const _tLetter=_TL?` · ${_TL}`:'';ctx.font=`bold ${_fs}px 'Rajdhani',sans-serif`;const _tw=ctx.measureText(_tLabel).width,_lw=_TL?ctx.measureText(_tLetter).width:0;const _bw=_tw+_lw+_px*2,_bh=_fs+_py*2+1;_cRect(ctx,mx,y+4,_bw,_bh,2,'rgba(212,144,16,0.12)','rgba(212,144,16,0.3)');ctx.fillStyle='#f0a020';ctx.fillText(_tLabel,mx+_px,y+4+_bh-_py-1);if(_TL){ctx.fillStyle=_TC[_TL];ctx.fillText(_tLetter,mx+_px+_tw,y+4+_bh-_py-1);}mx+=_bw+4;}
         if(m.fps)mx=_cBadge(ctx,Tr('fps_lbl').toUpperCase(),'#4db8ff','rgba(42,144,212,0.12)','rgba(42,144,212,0.3)',mx,y+4,9)+4;
         y+=MH;
       });
