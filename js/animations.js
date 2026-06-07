@@ -18,21 +18,25 @@ function initTitleAnimation() {
 
   const full1 = el.textContent;
   const full2 = el2 ? el2.textContent : '';
-  el.textContent = '';
-  if (el2) el2.textContent = '';
 
   const sub = document.getElementById('tsg-subtitle');
   if (sub) sub.style.opacity = '0';
 
   function typeLine(target, text, firstDelay, onDone) {
+    // Render all chars as transparent spans so layout stays stable
+    target.innerHTML = text.split('').map(ch => `<span style="color:transparent">${ch}</span>`).join('');
+    const spans = Array.from(target.querySelectorAll('span'));
     const cursor = document.createElement('span');
     cursor.className = 'type-cursor';
     cursor.textContent = '█';
-    target.insertAdjacentElement('afterend', cursor);
+    if (spans.length) target.insertBefore(cursor, spans[0]);
+    else target.appendChild(cursor);
     let i = 0;
     function tick() {
-      if (i < text.length) {
-        target.textContent += text[i++];
+      if (i < spans.length) {
+        spans[i].style.color = '';
+        spans[i].insertAdjacentElement('afterend', cursor);
+        i++;
         setTimeout(tick, i === 1 ? firstDelay : 18);
       } else {
         cursor.classList.add('cursor-done');
