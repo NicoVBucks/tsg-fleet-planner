@@ -1,0 +1,31 @@
+# Claude Code workspace config (contains local paths, no credentials)
+.claude/
+
+# Environment / secrets — never commit these
+.env
+.env.*
+*.env
+secrets.*
+*.secret
+*.pem
+*.key
+
+# Local settings overrides
+settings.local.json
+*.local.json
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*.swo
+*~
+
+# Node (if ever used)
+node_modules/
+npm-debug.log*
+
+# Build output (if ever used)
+dist/
+build/
