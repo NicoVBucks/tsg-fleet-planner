@@ -66,7 +66,7 @@ function allNamed(){return S.fleet.flatMap(ship=>ship.slots.filter(s=>s.name.tri
 function rolesBadges(sl){const p=[];if(sl.trench){const TCLR={A:'#f0a020',B:'#4db8ff',C:'#22d480'};const L=['A','B','C'].includes(sl.trench)?sl.trench:'';p.push(st('warning',L?`${Tr('trench')} <span style="color:${TCLR[L]};font-weight:900;margin-left:2px">· ${L}</span>`:Tr('trench')));}if(sl.fps)p.push(st('info',Tr('fps_lbl')));return p.join(' ');}
 
 function renderRecapRows(){
-  const groups=S.fleet.map(ship=>{const def=SHIPS[ship.shipId];const members=ship.slots.filter(s=>s.name.trim()).map(s=>({...s,def}));return{ship,def,members};}).filter(g=>g.ship.confirmed);
+  const groups=S.fleet.map(ship=>{const def=SHIPS[ship.shipId];const members=ship.slots.filter(s=>s.name.trim()||s.trench||s.fps).map(s=>({...s,def}));return{ship,def,members};}).filter(g=>g.ship.confirmed);
   if(!groups.length)return'';
   return groups.map((g,gi)=>{
     const acc=CLS_ACC[g.def.cls];
@@ -332,7 +332,7 @@ function resetFleet(){S.fleet=[];S.selCls=null;S.langOpen=false;resetCardCache()
 function togBal(uid){const s=S.fleet.find(s=>s.uid===uid);if(!s)return;s.ballistic=!s.ballistic;const card=document.getElementById('ship-card-'+uid);if(card){const def=SHIPS[s.shipId],acc=CLS_ACC[def.cls];card.style.borderLeftColor=def.cat==='fighters'&&s.ballistic?'rgba(34,212,128,0.6)':acc.bd;}const lbl=document.getElementById('lbl-'+uid+'-bal');if(lbl)lbl.style.color=s.ballistic?'#22d480':'#ff5040';const rb=document.getElementById('recap-body');if(rb)rb.innerHTML=renderRecapRows();const rc=document.getElementById('recap-card');if(rc)rc.style.display=S.fleet.some(s=>s.confirmed)?'':'none';updateHeaderScore();saveState();}
 function updName(sUid,slUid,val){const ship=S.fleet.find(s=>s.uid===sUid),sl=ship?.slots.find(s=>s.uid===slUid);if(!sl)return;sl.name=sanitizePlayerName(val);const filled=ship.slots.filter(s=>s.name.trim()).length,total=ship.slots.length;const badge=document.getElementById('badge-'+sUid);if(badge){const c=SC[filled===total?'success':'warning'];badge.textContent=filled+'/'+total;badge.style.background=c.bg;badge.style.color=c.text;badge.style.border=`.5px solid ${c.bd}`;}const rb=document.getElementById('recap-body');if(rb)rb.innerHTML=renderRecapRows();const rc=document.getElementById('recap-card');if(rc)rc.style.display=S.fleet.some(s=>s.confirmed)?'':'none';saveState();}
 function togSlot(sUid,slUid,f){const ship=S.fleet.find(s=>s.uid===sUid);const sl=ship?.slots.find(s=>s.uid===slUid);if(!sl)return;if(f==='trench'){sl.trench=sl.trench?false:true;}else{sl[f]=!sl[f];}const lbl=document.getElementById(`lbl-${slUid}-${f}`);if(lbl)lbl.style.color=sl[f]?(f==='trench'?'#f0a020':'#4db8ff'):'#4a7090';if(f==='trench'){const sel=document.getElementById('trench-sel-'+slUid);if(sel){sel.classList.toggle('trench-sel-on',!!sl.trench);sel.querySelectorAll('.trench-btn').forEach(b=>b.classList.toggle('active',b.dataset.val===sl.trench));}}const rb=document.getElementById('recap-body');if(rb)rb.innerHTML=renderRecapRows();const rc=document.getElementById('recap-card');if(rc)rc.style.display=S.fleet.some(s=>s.confirmed)?'':'none';updateHeaderScore();saveState();}
-function setTrench(sUid,slUid,val){const ship=S.fleet.find(s=>s.uid===sUid);const sl=ship?.slots.find(s=>s.uid===slUid);if(!sl||!sl.trench)return;sl.trench=val;const sel=document.getElementById('trench-sel-'+slUid);if(sel)sel.querySelectorAll('.trench-btn').forEach(b=>b.classList.toggle('active',b.dataset.val===val));const rb=document.getElementById('recap-body');if(rb)rb.innerHTML=renderRecapRows();const rc=document.getElementById('recap-card');if(rc)rc.style.display=S.fleet.some(s=>s.confirmed)?'':'none';saveState();}
+function setTrench(sUid,slUid,val){const ship=S.fleet.find(s=>s.uid===sUid);const sl=ship?.slots.find(s=>s.uid===slUid);if(!sl||!sl.trench)return;sl.trench=sl.trench===val?true:val;const sel=document.getElementById('trench-sel-'+slUid);if(sel)sel.querySelectorAll('.trench-btn').forEach(b=>b.classList.toggle('active',b.dataset.val===val));const rb=document.getElementById('recap-body');if(rb)rb.innerHTML=renderRecapRows();const rc=document.getElementById('recap-card');if(rc)rc.style.display=S.fleet.some(s=>s.confirmed)?'':'none';saveState();}
 function openShip(uid){const cur=S.fleet.find(s=>s.open);const doOpen=()=>{S.fleet.forEach(s=>s.open=false);const ship=S.fleet.find(s=>s.uid===uid);if(ship){ship.open=true;_openingUid=uid;}render();};if(cur&&cur.uid!==uid)animateCardClose(cur.uid,doOpen);else doOpen();}
 function checkAutoClose(sUid){const ship=S.fleet.find(s=>s.uid===sUid);if(!ship||!ship.open)return;if(ship.slots.every(s=>s.name.trim())){animateCardClose(sUid,()=>{ship.open=false;render();});}}
 function validateShip(uid){animateCardClose(uid,()=>{const ship=S.fleet.find(s=>s.uid===uid);if(ship){ship.open=false;ship.confirmed=true;delete ship._wasConfirmed;render();}});}
@@ -492,7 +492,7 @@ function _cBadge(ctx,text,fg,bg,bd,x,y,fs){
 async function generateShareCard(){
   const groups=S.fleet
     .filter(s=>s.confirmed)
-    .map(s=>({ship:s,def:SHIPS[s.shipId],members:s.slots.filter(sl=>sl.name.trim())}));
+    .map(s=>({ship:s,def:SHIPS[s.shipId],members:s.slots.filter(sl=>sl.name.trim()||sl.trench||sl.fps)}));
   if(!groups.length){showShareToast('empty');return;}
 
   const btn=document.getElementById('share-btn');
