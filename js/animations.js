@@ -33,28 +33,28 @@ function initTitleAnimation() {
     function tick() {
       if (i < text.length) {
         target.textContent += text[i++];
-        setTimeout(tick, i === 1 ? firstDelay : 36);
+        setTimeout(tick, i === 1 ? firstDelay : 18);
       } else {
         cursor.classList.add('cursor-done');
-        setTimeout(() => { cursor.remove(); onDone(); }, 600);
+        setTimeout(() => { cursor.remove(); onDone(); }, 280);
       }
     }
     tick();
   }
 
   setTimeout(() => {
-    typeLine(el, full1, 120, () => {
+    typeLine(el, full1, 60, () => {
       setTimeout(() => {
         if (el2) {
-          typeLine(el2, full2, 80, () => {
+          typeLine(el2, full2, 40, () => {
             if (sub) { sub.style.opacity = ''; sub.classList.add('subtitle-reveal'); }
           });
         } else {
           if (sub) { sub.style.opacity = ''; sub.classList.add('subtitle-reveal'); }
         }
-      }, 100);
+      }, 50);
     });
-  }, 280);
+  }, 120);
 }
 
 function applyCascade() {
