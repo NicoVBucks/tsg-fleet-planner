@@ -111,8 +111,8 @@ function animateScoreNum() {
   _scoreAnimId = requestAnimationFrame(tick);
 }
 
-const _TAB_IND_BG  = {fleet:'#2a90d4', score:'#1aab6d', timer:'#c47a0a'};
-const _TAB_IND_SHD = {fleet:'rgba(42,144,212,0.55)', score:'rgba(26,171,109,0.55)', timer:'rgba(196,122,10,0.55)'};
+const _TAB_IND_BG  = {fleet:'#2a90d4', score:'#1aab6d', timer:'#c47a0a', feedback:'#9a50d4'};
+const _TAB_IND_SHD = {fleet:'rgba(42,144,212,0.55)', score:'rgba(26,171,109,0.55)', timer:'rgba(196,122,10,0.55)', feedback:'rgba(154,80,212,0.55)'};
 
 function initTabIndicator() {
   const ind = document.getElementById('tab-indicator');

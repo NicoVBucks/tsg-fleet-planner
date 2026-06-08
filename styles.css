@@ -28,6 +28,7 @@ body{min-height:100%;background-color:#030a12;background-image:linear-gradient(r
 .tab.on{color:#4db8ff;text-shadow:0 0 16px rgba(77,184,255,0.28)}
 .tab.on[data-tab="score"]{color:#22d480;text-shadow:0 0 16px rgba(34,212,128,0.28)}
 .tab.on[data-tab="timer"]{color:#f0a020;text-shadow:0 0 16px rgba(240,160,32,0.28)}
+.tab.on[data-tab="feedback"]{color:#c888ff;text-shadow:0 0 16px rgba(200,136,255,0.28)}
 .tab:hover:not(.on){color:#8abcd4}
 .tab-indicator{position:absolute;bottom:0;left:0;height:2px;background:#2a90d4;box-shadow:0 0 8px rgba(42,144,212,0.55);border-radius:1px;pointer-events:none;transition:transform .32s cubic-bezier(0.22,1,0.36,1),width .32s cubic-bezier(0.22,1,0.36,1);will-change:transform,width}
 .lbl{font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#4a7090;margin-bottom:8px}
