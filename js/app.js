@@ -235,30 +235,9 @@ function renderLangDropdown(){
   </div>`;
 }
 
-function renderFeedback(){
-  return`<div style="max-width:460px">
-    <div class="card" style="padding:24px 28px">
-      <div style="font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;letter-spacing:.12em;color:#4a7090;margin-bottom:14px">CONTACT</div>
-      <p style="font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:600;color:#5a90b8;margin:0 0 22px;line-height:1.55">Signale un bug, suggère une amélioration ou corrige des données de vaisseau — un message direct sur RSI Spectrum suffit.</p>
-      <div style="display:flex;align-items:center;gap:14px;padding:14px 16px;background:rgba(154,80,212,0.06);border:1px solid rgba(154,80,212,0.22);border-radius:5px;margin-bottom:18px">
-        <div style="width:42px;height:42px;border-radius:50%;background:rgba(200,136,255,0.1);border:1px solid rgba(200,136,255,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-          <i class="ti ti-user" style="font-size:18px;color:#c888ff" aria-hidden="true"></i>
-        </div>
-        <div>
-          <div style="font-family:'Rajdhani',sans-serif;font-size:17px;font-weight:700;color:#c8dcea;letter-spacing:.04em">Daygon</div>
-          <div style="font-family:'Share Tech Mono',monospace;font-size:13px;color:#c888ff;margin-top:2px">@Daygonn</div>
-        </div>
-      </div>
-      <a href="https://robertsspaceindustries.com/en/citizens/Daygonn" target="_blank" rel="noopener noreferrer" class="btn" style="display:inline-flex;padding:10px 20px;border-color:rgba(200,136,255,0.38);color:#c888ff;background:rgba(200,136,255,0.07);font-size:14px;text-decoration:none;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:.06em">
-        <i class="ti ti-external-link" style="font-size:14px" aria-hidden="true"></i>Profil RSI Spectrum
-      </a>
-    </div>
-  </div>`;
-}
-
 function render(){
   const sc=S.fleet.length?computeScore():null;
-  const tabs=[{id:'fleet',label:Tr('tab_fleet'),icon:'ti-rocket',cnt:S.fleet.length},{id:'score',label:Tr('tab_score'),icon:'ti-chart-bar'},{id:'timer',label:Tr('tab_timer'),icon:'ti-clock',cnt:S.timer.phases.length||null},{id:'feedback',label:Tr('f_feedback'),icon:'ti-message-circle'}];
+  const tabs=[{id:'fleet',label:Tr('tab_fleet'),icon:'ti-rocket',cnt:S.fleet.length},{id:'score',label:Tr('tab_score'),icon:'ti-chart-bar'},{id:'timer',label:Tr('tab_timer'),icon:'ti-clock',cnt:S.timer.phases.length||null}];
   document.getElementById('root').innerHTML=`
     <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:2rem;gap:12px">
       <div>
@@ -287,7 +266,7 @@ function render(){
       </div>
       ${S.tab==='fleet'?`<div id="picker-section" style="padding:1.25rem 0 1rem">${renderPicker('0')}</div>`:''}
     </div>
-    <div id="tab-content" style="padding-top:1.75rem">${S.tab==='fleet'?renderFleet():S.tab==='score'?renderScore():S.tab==='timer'?renderTimer():renderFeedback()}</div>
+    <div id="tab-content" style="padding-top:1.75rem">${S.tab==='fleet'?renderFleet():S.tab==='score'?renderScore():renderTimer()}</div>
     <footer class="app-footer">
       <div class="footer-sep"></div>
       <div class="util-bar">
@@ -380,7 +359,7 @@ function handleClick(e){
     case 'open-modal':{const m=el.dataset.modal;if(m)openModal(m);break;}
     case 'close-modal':closeModal();break;
     case 'modal-inner':break;
-    case 'open-feedback':setTab('feedback');break;
+    case 'open-feedback':openModal('feedback');break;
     case 'hide-onboarding':try{localStorage.setItem('tsg_hide_onboarding','1');}catch(e){}render();break;
     case 'show-onboarding':try{localStorage.removeItem('tsg_hide_onboarding');}catch(e){}render();break;
     case 'start-timer':startTimer();break;
@@ -413,7 +392,7 @@ function handleChange(e){
 }
 
 // ── Modals ────────────────────────────────────────────────────────────────────
-const _MODAL_TYPES=['whats-new','privacy','about'];
+const _MODAL_TYPES=['whats-new','privacy','about','feedback'];
 let _modal=null;
 
 function renderModal(type){
@@ -439,9 +418,15 @@ function renderModal(type){
       ${mcheck('Nothing is sent anywhere unless you export or share it yourself.')}
       ${mcheck('The Star Citizen link opens the official site in a new tab.')}`,
     'about':`<div style="font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:600;color:#a8c8e0;line-height:1.75;margin-bottom:16px">TSG Fleet Planner is an unofficial Star Citizen community tool created by <span style="color:#d4a020;font-weight:700">${APP_AUTHOR}</span> to help mission leads plan fleet composition, assign crew roles, evaluate readiness and share summaries with their team.</div>
-      <div style="font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:600;color:#3a5870;line-height:1.7;padding-top:12px;border-top:1px solid rgba(42,100,180,0.14)">Star Citizen, Squadron 42, Roberts Space Industries, RSI and related marks are trademarks of Cloud Imperium Rights LLC and/or Cloud Imperium Rights Ltd. This tool is not endorsed by or affiliated with Cloud Imperium Group.</div>`
+      <div style="font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:600;color:#3a5870;line-height:1.7;padding-top:12px;border-top:1px solid rgba(42,100,180,0.14)">Star Citizen, Squadron 42, Roberts Space Industries, RSI and related marks are trademarks of Cloud Imperium Rights LLC and/or Cloud Imperium Rights Ltd. This tool is not endorsed by or affiliated with Cloud Imperium Group.</div>`,
+    'feedback':`<div style="font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:600;color:#a8c8e0;line-height:1.75;margin-bottom:20px">Signale un bug, suggère une amélioration ou corrige des données de vaisseau — envoie un message direct sur RSI Spectrum.</div>
+      <div style="display:flex;align-items:center;gap:14px;padding:13px 16px;background:rgba(154,80,212,0.06);border:1px solid rgba(154,80,212,0.22);border-radius:5px;margin-bottom:16px">
+        <div style="width:38px;height:38px;border-radius:50%;background:rgba(200,136,255,0.1);border:1px solid rgba(200,136,255,0.28);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-user" style="font-size:16px;color:#c888ff" aria-hidden="true"></i></div>
+        <div><div style="font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;color:#c8dcea;letter-spacing:.04em">Daygon</div><div style="font-family:'Share Tech Mono',monospace;font-size:12px;color:#c888ff;margin-top:2px">@Daygonn</div></div>
+      </div>
+      <a href="https://robertsspaceindustries.com/en/citizens/Daygonn" target="_blank" rel="noopener noreferrer" class="btn" style="display:inline-flex;padding:9px 18px;border-color:rgba(200,136,255,0.35);color:#c888ff;background:rgba(200,136,255,0.07);font-size:13px;text-decoration:none;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:.06em"><i class="ti ti-external-link" style="font-size:13px" aria-hidden="true"></i>Profil RSI Spectrum</a>`
   };
-  const titles={'whats-new':"What's New",'privacy':'Privacy','about':'About TSG Fleet Planner'};
+  const titles={'whats-new':"What's New",'privacy':'Privacy','about':'About TSG Fleet Planner','feedback':'Feedback'};
   return`<div class="modal-overlay" data-action="close-modal">
     <div class="modal-box" data-action="modal-inner">
       <div class="modal-header">
