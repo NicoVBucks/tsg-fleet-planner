@@ -86,8 +86,7 @@ function renderRecapRows(){
       </div>
       ${g.members.map((m,mi)=>`<div class="recap-member" style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;${mi<g.members.length-1?'border-bottom:1px solid rgba(42,100,180,0.1)':''}">
         <div style="display:flex;align-items:baseline;gap:10px">
-          <span style="font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:600;color:#c8dcea">${escapeHTML(m.name)}</span>
-          <span style="font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#5a90b8">${m.role}</span>
+          ${m.name.trim()?`<span style="font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:600;color:#c8dcea">${escapeHTML(m.name)}</span><span style="font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#5a90b8">${m.role}</span>`:''}
         </div>
         <div style="display:flex;gap:5px">${rolesBadges(m)||`<span style="font-family:'Rajdhani',sans-serif;font-size:14px;color:#3a6080">${Tr('no_role')}</span>`}</div>
       </div>`).join('')}
@@ -590,13 +589,8 @@ async function generateShareCard(){
       y+=SH;
       // Members
       g.members.forEach(m=>{
-        ctx.fillStyle='#c8dcea';ctx.font="600 13px 'Rajdhani',sans-serif";
-        ctx.fillText(m.name,PAD+14,y+17);
-        const nW=ctx.measureText(m.name).width;
-        ctx.fillStyle='#5a90b8';ctx.font="bold 11px 'Rajdhani',sans-serif";
-        ctx.fillText(m.role.toUpperCase(),PAD+14+nW+7,y+17);
-        const roW=ctx.measureText(m.role.toUpperCase()).width;
-        let mx=PAD+14+nW+7+roW+7;
+        let mx=PAD+14;
+        if(m.name.trim()){ctx.fillStyle='#c8dcea';ctx.font="600 13px 'Rajdhani',sans-serif";ctx.fillText(m.name,PAD+14,y+17);const nW=ctx.measureText(m.name).width;ctx.fillStyle='#5a90b8';ctx.font="bold 11px 'Rajdhani',sans-serif";ctx.fillText(m.role.toUpperCase(),PAD+14+nW+7,y+17);const roW=ctx.measureText(m.role.toUpperCase()).width;mx=PAD+14+nW+7+roW+7;}
         if(m.trench){const _TL=['A','B','C'].includes(m.trench)?m.trench:'';const _TC={A:'#ffd000',B:'#4db8ff',C:'#22d480'};const _fs=9,_px=6,_py=3;const _tLabel=Tr('trench').toUpperCase();const _tLetter=_TL?` · ${_TL}`:'';ctx.font=`bold ${_fs}px 'Rajdhani',sans-serif`;const _tw=ctx.measureText(_tLabel).width,_lw=_TL?ctx.measureText(_tLetter).width:0;const _bw=_tw+_lw+_px*2,_bh=_fs+_py*2+1;_cRect(ctx,mx,y+4,_bw,_bh,2,'rgba(212,144,16,0.12)','rgba(212,144,16,0.3)');ctx.fillStyle='#f0a020';ctx.fillText(_tLabel,mx+_px,y+4+_bh-_py-1);if(_TL){ctx.fillStyle=_TC[_TL];ctx.fillText(_tLetter,mx+_px+_tw,y+4+_bh-_py-1);}mx+=_bw+4;}
         if(m.fps)mx=_cBadge(ctx,Tr('fps_lbl').toUpperCase(),'#4db8ff','rgba(42,144,212,0.12)','rgba(42,144,212,0.3)',mx,y+4,9)+4;
         y+=MH;
