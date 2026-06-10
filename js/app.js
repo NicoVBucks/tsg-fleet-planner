@@ -1,5 +1,5 @@
 const APP_AUTHOR  = 'Daygonn';
-const APP_VERSION = 'v0.9';
+const APP_VERSION = 'v1.0';
 const FEEDBACK_HREF='mailto:'; // set to 'mailto:your@email.com' or a feedback URL
 let _u=0;const gid=()=>`u${++_u}`;
 let _openingUid=null;
@@ -406,19 +406,19 @@ function renderModal(type){
   function mcheck(txt){return`<div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:9px"><i class="ti ti-check" style="font-size:14px;color:#22d480;flex-shrink:0;margin-top:2px" aria-hidden="true"></i><span style="font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:600;color:#a8c8e0;line-height:1.5">${txt}</span></div>`;}
 
   const body={
-    'whats-new':`<div style="font-family:'Share Tech Mono',monospace;font-size:11px;color:#4db8ff;letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px">${APP_VERSION} — Latest</div>
-      ${mrow('new','Crew Summary export — download a PNG and copy to clipboard')}
-      ${mrow('new','Mission briefing onboarding with step-by-step guide')}
-      ${mrow('upd','Local autosave — fleet and timer persist across page closes')}
-      ${mrow('sec','Security hardening: strict CSP, sanitized input, no inline handlers')}
-      ${mrow('fix','Score layout, scroll behavior and tab indicator animation')}`,
-    'privacy':`<div style="font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;color:#22d480;letter-spacing:.06em;margin-bottom:14px">No account. No server. No analytics.</div>
-      ${mcheck('Fleet data is stored locally in your browser via localStorage.')}
-      ${mcheck('Crew Summary images are generated locally using the Canvas API.')}
-      ${mcheck('Nothing is sent anywhere unless you export or share it yourself.')}
-      ${mcheck('The Star Citizen link opens the official site in a new tab.')}`,
-    'about':`<div style="font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:600;color:#a8c8e0;line-height:1.75;margin-bottom:16px">TSG Fleet Planner is an unofficial Star Citizen community tool created by <span style="color:#d4a020;font-weight:700">${APP_AUTHOR}</span> to help mission leads plan fleet composition, assign crew roles, evaluate readiness and share summaries with their team.</div>
-      <div style="font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:600;color:#3a5870;line-height:1.7;padding-top:12px;border-top:1px solid rgba(42,100,180,0.14)">Star Citizen, Squadron 42, Roberts Space Industries, RSI and related marks are trademarks of Cloud Imperium Rights LLC and/or Cloud Imperium Rights Ltd. This tool is not endorsed by or affiliated with Cloud Imperium Group.</div>`,
+    'whats-new':`<div style="font-family:'Share Tech Mono',monospace;font-size:11px;color:#4db8ff;letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px">${APP_VERSION} — ${Tr('wn_latest')}</div>
+      ${mrow('new',Tr('wn_1'))}
+      ${mrow('new',Tr('wn_2'))}
+      ${mrow('upd',Tr('wn_3'))}
+      ${mrow('sec',Tr('wn_4'))}
+      ${mrow('fix',Tr('wn_5'))}`,
+    'privacy':`<div style="font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;color:#22d480;letter-spacing:.06em;margin-bottom:14px">${Tr('privacy_title')}</div>
+      ${mcheck(Tr('privacy_1'))}
+      ${mcheck(Tr('privacy_2'))}
+      ${mcheck(Tr('privacy_3'))}
+      ${mcheck(Tr('privacy_4'))}`,
+    'about':`<div style="font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:600;color:#a8c8e0;line-height:1.75;margin-bottom:16px">${Tr('about_desc',`<span style="color:#d4a020;font-weight:700">${APP_AUTHOR}</span>`)}</div>
+      <div style="font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:600;color:#3a5870;line-height:1.7;padding-top:12px;border-top:1px solid rgba(42,100,180,0.14)">${Tr('about_legal')}</div>`,
     'feedback':`<div style="font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:600;color:#a8c8e0;line-height:1.75;margin-bottom:20px">${Tr('feedback_desc')}</div>
       <div style="display:flex;align-items:center;gap:14px;padding:13px 16px;background:rgba(154,80,212,0.06);border:1px solid rgba(154,80,212,0.22);border-radius:5px;margin-bottom:16px">
         <div style="width:38px;height:38px;border-radius:50%;background:rgba(200,136,255,0.1);border:1px solid rgba(200,136,255,0.28);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-user" style="font-size:16px;color:#c888ff" aria-hidden="true"></i></div>
