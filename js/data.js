@@ -4,7 +4,7 @@ const CLS_ACC={light:{bg:'rgba(42,144,212,0.14)',color:'#4db8ff',bd:'rgba(42,144
 const CLS_ICONS={light:'ti-plane-tilt',medium:'ti-plane-tilt',heavy:'ti-plane-tilt',gunship:'ti-shield-bolt',capital:'ti-rocket'};
 const CAT_ROLES={fighters:['trench','fps'],subcapital:['fps'],capital:['fps']};
 const F=[{role:'Pilot',n:1}],FG=[{role:'Pilot',n:1},{role:'Gunner',n:1}];
-const P1G2=[{role:'Pilot',n:1},{role:'Gunner',n:2}],P1G4=[{role:'Pilot',n:1},{role:'Gunner',n:4}],P1G5=[{role:'Pilot',n:1},{role:'Gunner',n:5}];
+const P1G2=[{role:'Pilot',n:1},{role:'Gunner',n:2}],P1G4=[{role:'Pilot',n:1},{role:'Gunner',n:4}],P1G5=[{role:'Pilot',n:1},{role:'Gunner',n:5}],P1G6=[{role:'Pilot',n:1},{role:'Gunner',n:6}];
 const CLASSES=[{id:'light'},{id:'medium'},{id:'heavy'},{id:'gunship'},{id:'capital'}];
 const LANGS=['en','fr','de','it','es','ja'];
 
@@ -33,7 +33,7 @@ const SHIPS={
   shiv:{name:"Grey's Shiv",cls:'heavy',cat:'fighters',tunnel:false,slots:F},guardian:{name:'Mirai Guardian',cls:'heavy',cat:'fighters',tunnel:true,slots:F},
   guardian_mx:{name:'Mirai Guardian MX',cls:'heavy',cat:'fighters',tunnel:true,slots:F},m80:{name:'Origin M80',cls:'heavy',cat:'fighters',tunnel:true,slots:F},
   scorpius:{name:'RSI Scorpius',cls:'heavy',cat:'fighters',tunnel:true,slots:FG},scorpius_a:{name:'RSI Scorpius Antares',cls:'heavy',cat:'fighters',tunnel:true,slots:FG},
-  hammerhead:{name:'Aegis Hammerhead',cls:'gunship',cat:'subcapital',tunnel:false,slots:P1G5},redeemer:{name:'Aegis Redeemer',cls:'gunship',cat:'subcapital',tunnel:false,slots:FG},
+  hammerhead:{name:'Aegis Hammerhead',cls:'gunship',cat:'subcapital',tunnel:false,slots:P1G6},redeemer:{name:'Aegis Redeemer',cls:'gunship',cat:'subcapital',tunnel:false,slots:FG},
   tiburon:{name:'Aegis Tiburon',cls:'gunship',cat:'subcapital',tunnel:false,slots:P1G4},paladin:{name:'Anvil Paladin',cls:'gunship',cat:'subcapital',tunnel:false,slots:FG},
   fmis:{name:'MISC Freelancer MIS',cls:'gunship',cat:'subcapital',tunnel:false,slots:FG},perseus:{name:'RSI Perseus',cls:'gunship',cat:'subcapital',tunnel:false,fav:true,note:true,slots:P1G2},
   idris_m:{name:'Aegis Idris-M',cls:'capital',cat:'capital',tunnel:false,fav:true,slots:P1G4},idris_p:{name:'Aegis Idris-P',cls:'capital',cat:'capital',tunnel:false,fav:true,slots:P1G4},
