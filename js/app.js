@@ -1,5 +1,5 @@
 const APP_AUTHOR  = 'Daygonn';
-const APP_VERSION = 'v1.0';
+const APP_VERSION = 'v1.1';
 const FEEDBACK_HREF='mailto:'; // set to 'mailto:your@email.com' or a feedback URL
 let _u=0;const gid=()=>`u${++_u}`;
 let _openingUid=null;
@@ -123,7 +123,7 @@ function renderShipList(){
   const q=S.shipQ.trim().toLowerCase();
   if(q){
     const results=Object.entries(SHIPS).filter(([,d])=>d.name.toLowerCase().includes(q)||Tcls(d.cls).toLowerCase().includes(q)).sort(([,a],[,b])=>a.name.localeCompare(b.name));
-    if(!results.length)return`<div style="font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:600;color:#4a7090;padding:14px 0;letter-spacing:.04em">${Tr('search_no_results')}</div>`;
+    if(!results.length)return`<div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(42,100,180,0.14)"><div style="font-family:'Share Tech Mono',monospace;font-size:11px;color:#3a6a8a;letter-spacing:.12em">${Tr('search_no_results')}</div></div>`;
     return`<div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(42,100,180,0.14)"><div style="font-family:'Share Tech Mono',monospace;font-size:11px;color:#3a6a8a;letter-spacing:.12em;margin-bottom:10px">${Tr('search_count',results.length)}</div><div style="display:flex;gap:8px;flex-wrap:wrap">${results.map(([sid,d])=>`<button class="ship-btn${d.fav?' fav-btn':''}" data-action="add-ship" data-ship-id="${sid}">${d.fav?'★ ':''}${d.name}${d.warn?`<i class="ti ti-alert-triangle" style="font-size:12px;color:#c47a20" aria-hidden="true"></i>`:''}</button>`).join('')}</div></div>`;
   }
   if(S.selCls){const acc=CLS_ACC[S.selCls];const list=Object.entries(SHIPS).filter(([,d])=>d.cls===S.selCls).sort(([,a],[,b])=>a.name.localeCompare(b.name));const sCls=_clsJustChanged?'ships-enter':'';_clsJustChanged=false;return`<div class="${sCls}" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;padding-top:14px;border-top:1px solid ${acc.bd}">${list.map(([sid,d])=>`<button class="ship-btn${d.fav?' fav-btn':''}" data-action="add-ship" data-ship-id="${sid}">${d.fav?'★ ':''}${d.name}${d.warn?`<i class="ti ti-alert-triangle" style="font-size:12px;color:#c47a20" aria-hidden="true"></i>`:''}</button>`).join('')}</div>`;}
@@ -428,6 +428,10 @@ function renderModal(type){
 
   const body={
     'whats-new':`<div style="font-family:'Share Tech Mono',monospace;font-size:11px;color:#4db8ff;letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px">${APP_VERSION} — ${Tr('wn_latest')}</div>
+      ${mrow('new',Tr('wn_11_1'))}
+      ${mrow('upd',Tr('wn_11_2'))}
+      <div style="height:1px;background:rgba(42,100,180,0.16);margin:16px 0 14px"></div>
+      <div style="font-family:'Share Tech Mono',monospace;font-size:11px;color:#3a6a8a;letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px">v1.0</div>
       ${mrow('new',Tr('wn_1'))}
       ${mrow('new',Tr('wn_2'))}
       ${mrow('upd',Tr('wn_3'))}
