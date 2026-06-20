@@ -513,6 +513,13 @@ input[type="checkbox"] {
   transition: color .15s;
 }
 
+/* Ship search wrapper */
+.ship-search-wrap {
+  position: relative;
+  max-width: 340px;
+  margin-bottom: 12px;
+}
+
 /* Trench letter selector */
 .trench-sel {
   display: flex;
@@ -1065,6 +1072,7 @@ input[type="checkbox"] {
   .util-bar          { gap: 4px 10px; }
   .util-bar-right    { gap: 4px 8px; }
   .modal-box         { padding: 1.1rem; }
+  .ship-search-wrap  { max-width: 100%; }
 }
 
 @media (max-width: 400px) {
