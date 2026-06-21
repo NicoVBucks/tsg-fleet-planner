@@ -45,7 +45,7 @@ function loadState(){
           uid:typeof sl.uid==='string'?sl.uid:gid(),
           role:typeof sl.role==='string'?sl.role:'',
           name:sanitizePlayerName(sl.name||''),
-          trench:!!sl.trench,fps:!!sl.fps
+          trench:sl.trench||false,fps:!!sl.fps
         }))
       }));
       S.fleet.forEach(s=>{
@@ -119,6 +119,8 @@ function renderOnboarding(){
   </div>`;
 }
 
+function renderShipBtn(sid,d){return`<button class="ship-btn${d.fav?' fav-btn':''}" data-action="add-ship" data-ship-id="${sid}">${d.fav?'★ ':''}${d.name}${d.stealth?' '+st('stealth','STEALTH'):''}${d.interdiction?' '+st('interdiction','INTERDICTION'):''}${d.interceptor?' '+st('interceptor','INTERCEPTOR'):''}</button>`;}
+
 function shipScore(name,q){
   const full=name.toLowerCase(),words=full.split(/\s+/),model=words.slice(1).join(' '),mw=model?model.split(/\s+/):[];
   if(model.startsWith(q))return 0;       // "per" → Perseus
@@ -134,16 +136,16 @@ function renderShipList(){
   if(q){
     const results=Object.entries(SHIPS).map(([sid,d])=>{const s=shipScore(d.name,q);const cs=s!==-1?s:(Tcls(d.cls).toLowerCase().startsWith(q)?5:Tcls(d.cls).toLowerCase().includes(q)?6:-1);return[sid,d,cs];}).filter(([,,cs])=>cs!==-1).sort(([,a,sa],[,b,sb])=>sa!==sb?sa-sb:a.name.localeCompare(b.name)).map(([sid,d])=>[sid,d]);
     if(!results.length)return`<div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(42,100,180,0.14)"><div style="font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:600;color:#4a7090;padding:4px 0;letter-spacing:.04em">${Tr('search_no_results')}</div></div>`;
-    return`<div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(42,100,180,0.14)"><div style="font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:600;color:#4a7090;letter-spacing:.04em;margin-bottom:10px">${Tr('search_count',results.length)}</div><div style="display:flex;gap:8px;flex-wrap:wrap">${results.map(([sid,d])=>`<button class="ship-btn${d.fav?' fav-btn':''}" data-action="add-ship" data-ship-id="${sid}">${d.fav?'★ ':''}${d.name}${d.stealth?' '+st('stealth','STEALTH'):''}${d.interdiction?' '+st('interdiction','INTERDICTION'):''}${d.interceptor?' '+st('interceptor','INTERCEPTOR'):''}${d.warn?`<i class="ti ti-alert-triangle" style="font-size:12px;color:#c47a20" aria-hidden="true"></i>`:''}</button>`).join('')}</div></div>`;
+    return`<div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(42,100,180,0.14)"><div style="font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:600;color:#4a7090;letter-spacing:.04em;margin-bottom:10px">${Tr('search_count',results.length)}</div><div style="display:flex;gap:8px;flex-wrap:wrap">${results.map(([sid,d])=>renderShipBtn(sid,d)).join('')}</div></div>`;
   }
-  if(S.selCls){const acc=CLS_ACC[S.selCls];const list=Object.entries(SHIPS).filter(([,d])=>d.cls===S.selCls).sort(([,a],[,b])=>a.name.localeCompare(b.name));const sCls=_clsJustChanged?'ships-enter':'';_clsJustChanged=false;return`<div class="${sCls}" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;padding-top:14px;border-top:1px solid ${acc.bd}">${list.map(([sid,d])=>`<button class="ship-btn${d.fav?' fav-btn':''}" data-action="add-ship" data-ship-id="${sid}">${d.fav?'★ ':''}${d.name}${d.stealth?' '+st('stealth','STEALTH'):''}${d.interdiction?' '+st('interdiction','INTERDICTION'):''}${d.interceptor?' '+st('interceptor','INTERCEPTOR'):''}${d.warn?`<i class="ti ti-alert-triangle" style="font-size:12px;color:#c47a20" aria-hidden="true"></i>`:''}</button>`).join('')}</div>`;}
+  if(S.selCls){const acc=CLS_ACC[S.selCls];const list=Object.entries(SHIPS).filter(([,d])=>d.cls===S.selCls).sort(([,a],[,b])=>a.name.localeCompare(b.name));const sCls=_clsJustChanged?'ships-enter':'';_clsJustChanged=false;return`<div class="${sCls}" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;padding-top:14px;border-top:1px solid ${acc.bd}">${list.map(([sid,d])=>renderShipBtn(sid,d)).join('')}</div>`;}
   return'';
 }
 
 function renderPicker(mb='1.75rem'){
   const q=S.shipQ.trim();
   const clsBtns=CLASSES.map(c=>{const isOn=S.selCls===c.id&&!q,acc=CLS_ACC[c.id];return`<button class="cls-btn" data-action="set-cls" data-cls="${c.id}" style="${isOn?`background:${acc.bg};color:${acc.color};border-color:${acc.bd};box-shadow:0 0 12px ${acc.bg}`:''}"><i class="ti ${CLS_ICONS[c.id]}" aria-hidden="true"></i>${Tcls(c.id)}</button>`;}).join('');
-  return`<div style="margin-bottom:${mb}"><div class="lbl" style="margin-bottom:10px">${Tr('add')}</div><div class="ship-search-wrap"><i class="ti ti-search" style="position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:14px;color:#4a7090;pointer-events:none" aria-hidden="true"></i><input type="text" placeholder="${Tr('search_ph')}" value="${escapeHTML(S.shipQ)}" data-action="ship-search" style="padding-left:33px;${q?'padding-right:32px;border-color:rgba(42,144,212,0.45)':'padding-right:12px'}"><button data-action="clear-ship-search" aria-label="${Tr('search_clear')}" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);display:${q?'flex':'none'};align-items:center;justify-content:center;background:none;border:none;cursor:pointer;color:#5a90b8;padding:4px;border-radius:3px"><i class="ti ti-x" style="font-size:14px" aria-hidden="true"></i></button></div><div style="display:flex;gap:8px;flex-wrap:wrap">${clsBtns}</div><div id="ship-list">${renderShipList()}</div></div>`;
+  return`<div style="margin-bottom:${mb}"><div class="lbl" style="margin-bottom:10px">${Tr('add')}</div><div class="ship-search-wrap"><i class="ti ti-search" aria-hidden="true"></i><input type="text" placeholder="${Tr('search_ph')}" value="${escapeHTML(S.shipQ)}" data-action="ship-search"${q?' style="padding-right:32px;border-color:rgba(42,144,212,0.45)"':''}><button data-action="clear-ship-search" aria-label="${Tr('search_clear')}"${q?' style="display:flex"':''}><i class="ti ti-x" aria-hidden="true"></i></button></div><div style="display:flex;gap:8px;flex-wrap:wrap">${clsBtns}</div><div id="ship-list">${renderShipList()}</div></div>`;
 }
 
 function renderFleet(){
@@ -348,10 +350,11 @@ function animateCardClose(uid,cb){const el=document.getElementById('ship-card-'+
 function addShip(sid){const cur=S.fleet.find(s=>s.open);const blank=cur&&!cur.confirmed&&cur.slots.every(s=>!s.name.trim());const doAdd=()=>{S.fleet.forEach(s=>s.open=false);if(blank)S.fleet=S.fleet.filter(s=>s.uid!==cur.uid);S.fleet.push(mkShip(sid));S.langOpen=false;render();};if(cur)animateCardClose(cur.uid,doAdd);else doAdd();}
 function rmShip(uid){S.fleet=S.fleet.filter(s=>s.uid!==uid);render();}
 function resetFleet(){S.fleet=[];S.selCls=null;S.langOpen=false;resetCardCache();render();}
-function togBal(uid){const s=S.fleet.find(s=>s.uid===uid);if(!s)return;s.ballistic=!s.ballistic;const card=document.getElementById('ship-card-'+uid);if(card){const def=SHIPS[s.shipId],acc=CLS_ACC[def.cls];card.style.borderLeftColor=def.cat==='fighters'&&s.ballistic?'rgba(34,212,128,0.6)':acc.bd;}const lbl=document.getElementById('lbl-'+uid+'-bal');if(lbl)lbl.style.color=s.ballistic?'#22d480':'#ff5040';const rb=document.getElementById('recap-body');if(rb)rb.innerHTML=renderRecapRows();const rc=document.getElementById('recap-card');if(rc)rc.style.display=S.fleet.some(s=>s.confirmed)?'':'none';updateHeaderScore();saveState();}
-function updName(sUid,slUid,val){const ship=S.fleet.find(s=>s.uid===sUid),sl=ship?.slots.find(s=>s.uid===slUid);if(!sl)return;sl.name=sanitizePlayerName(val);const filled=ship.slots.filter(s=>s.name.trim()).length,total=ship.slots.length;const badge=document.getElementById('badge-'+sUid);if(badge){const c=SC[filled===total?'success':'warning'];badge.textContent=filled+'/'+total;badge.style.background=c.bg;badge.style.color=c.text;badge.style.border=`.5px solid ${c.bd}`;}const rb=document.getElementById('recap-body');if(rb)rb.innerHTML=renderRecapRows();const rc=document.getElementById('recap-card');if(rc)rc.style.display=S.fleet.some(s=>s.confirmed)?'':'none';saveState();}
-function togSlot(sUid,slUid,f){const ship=S.fleet.find(s=>s.uid===sUid);const sl=ship?.slots.find(s=>s.uid===slUid);if(!sl)return;if(f==='trench'){sl.trench=sl.trench?false:true;}else{sl[f]=!sl[f];}const lbl=document.getElementById(`lbl-${slUid}-${f}`);if(lbl)lbl.style.color=sl[f]?(f==='trench'?'#f0a020':'#4db8ff'):'#4a7090';if(f==='trench'){const sel=document.getElementById('trench-sel-'+slUid);if(sel){sel.classList.toggle('trench-sel-on',!!sl.trench);sel.querySelectorAll('.trench-btn').forEach(b=>b.classList.toggle('active',b.dataset.val===sl.trench));}}const rb=document.getElementById('recap-body');if(rb)rb.innerHTML=renderRecapRows();const rc=document.getElementById('recap-card');if(rc)rc.style.display=S.fleet.some(s=>s.confirmed)?'':'none';updateHeaderScore();saveState();}
-function setTrench(sUid,slUid,val){const ship=S.fleet.find(s=>s.uid===sUid);const sl=ship?.slots.find(s=>s.uid===slUid);if(!sl||!sl.trench)return;sl.trench=sl.trench===val?true:val;const sel=document.getElementById('trench-sel-'+slUid);if(sel)sel.querySelectorAll('.trench-btn').forEach(b=>b.classList.toggle('active',b.dataset.val===sl.trench));const rb=document.getElementById('recap-body');if(rb)rb.innerHTML=renderRecapRows();const rc=document.getElementById('recap-card');if(rc)rc.style.display=S.fleet.some(s=>s.confirmed)?'':'none';saveState();}
+function syncRecap(){const rb=document.getElementById('recap-body');if(rb)rb.innerHTML=renderRecapRows();const rc=document.getElementById('recap-card');if(rc)rc.style.display=S.fleet.some(s=>s.confirmed)?'':'none';}
+function togBal(uid){const s=S.fleet.find(s=>s.uid===uid);if(!s)return;s.ballistic=!s.ballistic;const card=document.getElementById('ship-card-'+uid);if(card){const def=SHIPS[s.shipId],acc=CLS_ACC[def.cls];card.style.borderLeftColor=def.cat==='fighters'&&s.ballistic?'rgba(34,212,128,0.6)':acc.bd;}const lbl=document.getElementById('lbl-'+uid+'-bal');if(lbl)lbl.style.color=s.ballistic?'#22d480':'#ff5040';syncRecap();updateHeaderScore();saveState();}
+function updName(sUid,slUid,val){const ship=S.fleet.find(s=>s.uid===sUid),sl=ship?.slots.find(s=>s.uid===slUid);if(!sl)return;sl.name=sanitizePlayerName(val);const filled=ship.slots.filter(s=>s.name.trim()).length,total=ship.slots.length;const badge=document.getElementById('badge-'+sUid);if(badge){const c=SC[filled===total?'success':'warning'];badge.textContent=filled+'/'+total;badge.style.background=c.bg;badge.style.color=c.text;badge.style.border=`.5px solid ${c.bd}`;}syncRecap();saveState();}
+function togSlot(sUid,slUid,f){const ship=S.fleet.find(s=>s.uid===sUid);const sl=ship?.slots.find(s=>s.uid===slUid);if(!sl)return;if(f==='trench'){sl.trench=sl.trench?false:true;}else{sl[f]=!sl[f];}const lbl=document.getElementById(`lbl-${slUid}-${f}`);if(lbl)lbl.style.color=sl[f]?(f==='trench'?'#f0a020':'#4db8ff'):'#4a7090';if(f==='trench'){const sel=document.getElementById('trench-sel-'+slUid);if(sel){sel.classList.toggle('trench-sel-on',!!sl.trench);sel.querySelectorAll('.trench-btn').forEach(b=>b.classList.toggle('active',b.dataset.val===sl.trench));}}syncRecap();updateHeaderScore();saveState();}
+function setTrench(sUid,slUid,val){const ship=S.fleet.find(s=>s.uid===sUid);const sl=ship?.slots.find(s=>s.uid===slUid);if(!sl||!sl.trench)return;sl.trench=sl.trench===val?true:val;const sel=document.getElementById('trench-sel-'+slUid);if(sel)sel.querySelectorAll('.trench-btn').forEach(b=>b.classList.toggle('active',b.dataset.val===sl.trench));syncRecap();saveState();}
 function openShip(uid){const cur=S.fleet.find(s=>s.open);const doOpen=()=>{S.fleet.forEach(s=>s.open=false);const ship=S.fleet.find(s=>s.uid===uid);if(ship){ship.open=true;_openingUid=uid;}render();};if(cur&&cur.uid!==uid)animateCardClose(cur.uid,doOpen);else doOpen();}
 function checkAutoClose(sUid){const ship=S.fleet.find(s=>s.uid===sUid);if(!ship||!ship.open)return;if(ship.slots.every(s=>s.name.trim())){animateCardClose(sUid,()=>{ship.open=false;render();});}}
 function validateShip(uid){animateCardClose(uid,()=>{const ship=S.fleet.find(s=>s.uid===uid);if(ship){ship.open=false;ship.confirmed=true;delete ship._wasConfirmed;render();}});}
@@ -400,12 +403,12 @@ function handleInput(e){
     updName(uid,slotId,el.value);
   }else if(el.dataset.action==='ship-search'){
     S.shipQ=el.value;
-    const sl=document.getElementById('ship-list');
-    if(sl)sl.innerHTML=renderShipList();
+    const shipListEl=document.getElementById('ship-list');
+    if(shipListEl)shipListEl.innerHTML=renderShipList();
     const cb=document.querySelector('[data-action="clear-ship-search"]');
     if(cb)cb.style.display=S.shipQ?'flex':'none';
-    el.style.paddingRight=S.shipQ?'32px':'12px';
-    el.style.borderColor=S.shipQ?'rgba(42,144,212,0.45)':'rgba(42,100,180,0.25)';
+    el.style.paddingRight=S.shipQ?'32px':'';
+    el.style.borderColor=S.shipQ?'rgba(42,144,212,0.45)':'';
     document.querySelectorAll('[data-action="set-cls"]').forEach(btn=>{const c=btn.dataset.cls,acc=CLS_ACC[c],on=S.selCls===c&&!S.shipQ;btn.style.cssText=on?`background:${acc.bg};color:${acc.color};border-color:${acc.bd};box-shadow:0 0 12px ${acc.bg}`:'';});
   }
 }

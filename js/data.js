@@ -4,7 +4,7 @@ const CLS_ACC={light:{bg:'rgba(42,144,212,0.14)',color:'#4db8ff',bd:'rgba(42,144
 const CLS_ICONS={light:'ti-plane-tilt',medium:'ti-plane-tilt',heavy:'ti-plane-tilt',gunship:'ti-shield-bolt',capital:'ti-rocket'};
 const CAT_ROLES={fighters:['trench','fps'],subcapital:['fps'],capital:['fps']};
 const F=[{role:'Pilot',n:1}],P2=[{role:'Pilot',n:2}],FG=[{role:'Pilot',n:1},{role:'Gunner',n:1}];
-const P1G2=[{role:'Pilot',n:1},{role:'Gunner',n:2}],P1G4=[{role:'Pilot',n:1},{role:'Gunner',n:4}],P1G5=[{role:'Pilot',n:1},{role:'Gunner',n:5}],P1G6=[{role:'Pilot',n:1},{role:'Gunner',n:6}];
+const P1G2=[{role:'Pilot',n:1},{role:'Gunner',n:2}],P1G4=[{role:'Pilot',n:1},{role:'Gunner',n:4}],P1G6=[{role:'Pilot',n:1},{role:'Gunner',n:6}];
 const CLASSES=[{id:'light'},{id:'medium'},{id:'heavy'},{id:'gunship'},{id:'capital'}];
 const LANGS=['en','fr','de','it','es','ja'];
 

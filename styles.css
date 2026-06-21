@@ -526,6 +526,37 @@ input[type="checkbox"] {
   max-width: 340px;
   margin-bottom: 12px;
 }
+.ship-search-wrap .ti-search {
+  position: absolute;
+  left: 11px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+.ship-search-wrap input[type="text"] {
+  padding-left: 33px;
+  padding-right: 12px;
+}
+.ship-search-wrap [data-action="clear-ship-search"] {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #5a90b8;
+  padding: 4px;
+  border-radius: 3px;
+}
+.ship-search-wrap [data-action="clear-ship-search"] .ti-x {
+  font-size: 14px;
+}
 
 /* Trench letter selector */
 .trench-sel {
