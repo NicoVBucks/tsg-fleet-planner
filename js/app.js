@@ -165,7 +165,7 @@ function renderFleet(){
       </div>
       ${pW?`<div style="font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;text-transform:uppercase;color:#ff5040;display:flex;align-items:center;gap:8px;margin-bottom:14px"><i class="ti ti-alert-circle" aria-hidden="true"></i>${Tr('min_crew')}</div>`:''}
       <div style="display:flex;flex-direction:column;gap:10px">
-        ${ship.slots.map((sl,slIdx)=>`${slIdx>0&&sl.role!==ship.slots[slIdx-1].role?'<div style="height:1px;background:rgba(42,100,180,0.18);margin:2px 0"></div>':''}<div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+        ${ship.slots.map((sl,slIdx)=>`${slIdx>0&&sl.role!==ship.slots[slIdx-1].role?'<div style="height:1px;background:rgba(42,100,180,0.4);margin:8px 0"></div>':''}<div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
           <div style="font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#5a90b8;min-width:86px;flex-shrink:0">${sl.role}</div>
           <input type="text" maxlength="40" placeholder="${Tr('ph_name')}" value="${escapeHTML(sl.name)}" data-action="upd-name" data-uid="${ship.uid}" data-slot-id="${sl.uid}">
           ${slIdx===0&&def.cat==='fighters'?`<label id="lbl-${ship.uid}-bal" class="chk-wrap" style="color:${ship.ballistic?'#22d480':'#ff5040'}"><input type="checkbox" ${ship.ballistic?'checked':''} data-action="tog-bal" data-uid="${ship.uid}"><i class="ti ti-target" style="font-size:16px" aria-hidden="true"></i>${Tr('bal_lbl')}</label>`:''}
