@@ -440,6 +440,8 @@ function renderModal(type){
     'whats-new':`<div style="font-family:'Share Tech Mono',monospace;font-size:11px;color:#4db8ff;letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px">${APP_VERSION} — ${Tr('wn_latest')}</div>
       ${mrow('new',Tr('wn_11_1'))}
       ${mrow('upd',Tr('wn_11_2'))}
+      ${mrow('new',Tr('wn_11_3'))}
+      ${mrow('new',Tr('wn_11_4'))}
       <div style="height:1px;background:rgba(42,100,180,0.16);margin:16px 0 14px"></div>
       <div style="font-family:'Share Tech Mono',monospace;font-size:11px;color:#3a6a8a;letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px">v1.0</div>
       ${mrow('new',Tr('wn_1'))}
