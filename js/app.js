@@ -119,10 +119,20 @@ function renderOnboarding(){
   </div>`;
 }
 
+function shipScore(name,q){
+  const full=name.toLowerCase(),words=full.split(/\s+/),model=words.slice(1).join(' '),mw=model?model.split(/\s+/):[];
+  if(model.startsWith(q))return 0;       // "per" → Perseus
+  if(mw.some(w=>w.startsWith(q)))return 1; // "horn" → Hornet, "gla" → Glaive
+  if(full.startsWith(q))return 2;        // "esp" → Esperia …
+  if(words.some(w=>w.startsWith(q)))return 3; // "anv" → Anvil …
+  if(full.includes(q))return 4;          // "per" dans Super / Esperia
+  return-1;
+}
+
 function renderShipList(){
   const q=S.shipQ.trim().toLowerCase();
   if(q){
-    const results=Object.entries(SHIPS).filter(([,d])=>d.name.toLowerCase().includes(q)||Tcls(d.cls).toLowerCase().includes(q)).sort(([,a],[,b])=>a.name.localeCompare(b.name));
+    const results=Object.entries(SHIPS).map(([sid,d])=>{const s=shipScore(d.name,q);const cs=s!==-1?s:(Tcls(d.cls).toLowerCase().startsWith(q)?5:Tcls(d.cls).toLowerCase().includes(q)?6:-1);return[sid,d,cs];}).filter(([,,cs])=>cs!==-1).sort(([,a,sa],[,b,sb])=>sa!==sb?sa-sb:a.name.localeCompare(b.name)).map(([sid,d])=>[sid,d]);
     if(!results.length)return`<div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(42,100,180,0.14)"><div style="font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:600;color:#4a7090;padding:4px 0;letter-spacing:.04em">${Tr('search_no_results')}</div></div>`;
     return`<div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(42,100,180,0.14)"><div style="font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:600;color:#4a7090;letter-spacing:.04em;margin-bottom:10px">${Tr('search_count',results.length)}</div><div style="display:flex;gap:8px;flex-wrap:wrap">${results.map(([sid,d])=>`<button class="ship-btn${d.fav?' fav-btn':''}" data-action="add-ship" data-ship-id="${sid}">${d.fav?'★ ':''}${d.name}${d.stealth?' '+st('stealth','STEALTH'):''}${d.interdiction?' '+st('interdiction','INTERDICTION'):''}${d.interceptor?' '+st('interceptor','INTERCEPTOR'):''}${d.warn?`<i class="ti ti-alert-triangle" style="font-size:12px;color:#c47a20" aria-hidden="true"></i>`:''}</button>`).join('')}</div></div>`;
   }
