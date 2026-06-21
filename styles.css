@@ -470,6 +470,13 @@ body {
   display: inline-block;
 }
 
+.ship-btn .stag {
+  font-size: 10px;
+  padding: 1px 5px;
+  vertical-align: middle;
+  margin-left: 4px;
+}
+
 input[type="text"] {
   background: var(--bg-input);
   border: 1px solid rgba(42, 100, 180, 0.25);
